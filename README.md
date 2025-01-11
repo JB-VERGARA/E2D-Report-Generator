@@ -44,7 +44,7 @@ To run the project locally:
 3. Start the server:
 
    ```bash
-   npm start
+   node server.js
    ```
 
 4. Visit `http://localhost:3000` in your browser to use the system.
