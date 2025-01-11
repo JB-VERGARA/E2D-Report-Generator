@@ -1,5 +1,5 @@
 
-# E2D Report Generator
+# E2D Report Generator (LOCAL)
 
 The **E2D Report Generator** is a web-based tool that allows users to generate reports based on data from an Excel file. The reports are generated in Word document format using customizable templates.
 
