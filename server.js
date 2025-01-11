@@ -17,10 +17,10 @@ const storage = multer.diskStorage({
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
-    cb(null, uploadPath);
+    cb(null, uploadPath); // Ensure the callback is called properly
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, file.originalname); // Ensure the file name is set correctly
   },
 });
 const upload = multer({ storage: storage });
@@ -30,8 +30,21 @@ app.use(express.static('public'));
 
 // Route to handle file upload and processing
 app.post('/upload', upload.single('excelFile'), async (req, res) => {
+  console.log('Uploaded file:', req.file);
+  
+  if (!req.file) {
+    console.error('No file uploaded.');
+    return res.status(400).send('No file uploaded.');
+  }
+
   const filePath = path.join(__dirname, 'uploads', req.file.filename);
   const selectedBorder = req.body.selectedBorder; // '1st Border' or '2nd Border'
+
+  // Validate selectedBorder
+  if (!selectedBorder || (selectedBorder !== '1st Border' && selectedBorder !== '2nd Border')) {
+    console.error('Invalid selectedBorder value:', selectedBorder);
+    return res.status(400).send('Invalid selected border.');
+  }
 
   // Paths for templates
   const firstBorderTemplate = path.join(__dirname, 'src', 'first_border_template.docx');
@@ -39,6 +52,7 @@ app.post('/upload', upload.single('excelFile'), async (req, res) => {
   const templatePath = selectedBorder === '1st Border' ? firstBorderTemplate : secondBorderTemplate;
 
   if (!fs.existsSync(templatePath)) {
+    console.error('Selected template file not found:', templatePath);
     return res.status(500).send('Selected template file not found!');
   }
 
@@ -62,6 +76,17 @@ app.post('/upload', upload.single('excelFile'), async (req, res) => {
   const promises = jsonData.map((row) => {
     return new Promise((resolve, reject) => {
       try {
+        // Ensure that all necessary values are defined
+        const clientFolder = row.Client || 'Unknown Client';
+        const fileName = row['IR Number'] ? `${row['IR Number']}.docx` : 'Unnamed.docx';
+        
+        // Make sure clientFolder and fileName are not undefined
+        if (!clientFolder || !fileName) {
+          console.error('Invalid row data:', row);
+          reject(new Error('Missing necessary row data'));
+          return;
+        }
+
         const pizZip = new PizZip(templateFile);
         const doc = new docxtemplater(pizZip);
 
@@ -89,13 +114,14 @@ app.post('/upload', upload.single('excelFile'), async (req, res) => {
 
         // Organize folders and file names in the ZIP
         const borderFolder = selectedBorder;
-        const clientFolder = row.Client;
-        const fileName = `${row['IR Number']}.docx`;
+        const filePathToAdd = path.join(borderFolder, clientFolder, fileName);
 
-        zip.addFile(path.join(borderFolder, clientFolder, fileName), buf);
+        // Ensure the full path is correct
+        console.log('Adding file to zip:', filePathToAdd);
+        zip.addFile(filePathToAdd, buf);
         resolve();
       } catch (error) {
-        console.error('Error generating document:', error);
+        console.error('Error generating document for client:', row.Client, error);
         reject(error);
       }
     });
