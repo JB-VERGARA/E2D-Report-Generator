@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The **E2D (Excel to Document) Report Generator** automates the conversion of Excel data into formatted Word documents. This tool is perfect for developers looking to create report generation functionality using Javascript, Node.JS, NPM.
+The **E2D (Excel to Document) Report Generator** automates the conversion of Excel data into formatted Word documents. This tool is perfect for developers looking to create report generation functionality using Javascript, Node.JS, and NPM.
 
 ## Why Use This Repository?
 
