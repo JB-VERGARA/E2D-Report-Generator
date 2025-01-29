@@ -1,50 +1,120 @@
+# E2D (Excel to Document) Report Generator (Developer Guide)
 
-# E2D Report Generator (LOCAL)
+## Introduction
 
-The **E2D Report Generator** is a web-based tool that allows users to generate reports based on data from an Excel file. The reports are generated in Word document format using customizable templates.
+The **E2D Report Generator** automates the conversion of Excel data into formatted Word documents using customizable templates. This tool is perfect for developers looking to streamline report generation.
+
+## Why Use This Repository?
+
+- **Saves Time:** Automatically generates Word reports from Excel data.
+- **Customizable:** Supports multiple templates based on user selection.
+- **Batch Processing:** Generates multiple reports in one go.
+- **ZIP Packaging:** Bundles all generated documents into a single ZIP file.
 
 ## Features
 
-- **Easy Report Generation:** Upload an Excel file and select a template to generate reports automatically.
-- **Customizable Templates:** Choose between different border templates (1st Border or 2nd Border).
-- **Automated Document Creation:** Automatically populate Word documents with data from the Excel file.
-- **ZIP File Download:** Download all generated reports in a ZIP file.
+- **Excel to Word Automation:** Parses Excel files and fills Word templates dynamically.
+- **Multiple Template Support:** Store various `.docx` templates in the `src/` folder for template selection.
+- **Easy Customization:** Modify templates and data mappings as needed.
+- **Web-Based Interface:** An endpoint for file uploads and report generation.
 
-## How to Use
+## Installation & Setup
 
-### Upload Your Excel File:
-- Navigate to the system’s interface.
-- Choose your Excel file that contains the necessary data for report generation.
+### Prerequisites
 
-### Select Template:
-- Choose the desired border template (either "1st Border" or "2nd Border").
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
 
-### Generate Reports:
-- Click on the **Generate Reports** button. The system will process the data from the Excel file and generate reports based on the selected template.
+### Clone the Repository
 
-### Download Reports:
-- After the reports are generated, a ZIP file will be provided for download containing all the Word documents.
+```bash
+git clone https://github.com/JB-VERGARA/e2d-report-generator.git
+cd e2d-report-generator
+```
 
-## Installation
+### Install Dependencies
 
-To run the project locally:
+```bash
+npm install
+```
 
-1. Clone the repository:
+### Run the Server
 
-   ```bash
-   git clone https://github.com/JB-VERGARA/e2d-report-generator.git
-   ```
+```bash
+node server.js
+```
 
-2. Install dependencies:
+### Access the Application
 
-   ```bash
-   npm install
-   ```
+```
+http://localhost:3000
+```
 
-3. Start the server:
+## How It Works
 
-   ```bash
-   node server.js
-   ```
+1. **Upload an Excel File:** The system reads the uploaded file and extracts data.
+2. **Select a Template:** Users choose from multiple available `.docx` templates.
+3. **Generate Reports:** Each row in the Excel file is processed into a separate Word document.
+4. **Download Reports:** A ZIP file containing all reports is available for download.
 
-4. Visit `http://localhost:3000` in your browser to use the system.
+## API Endpoints
+
+### Upload & Process Excel File
+
+```http
+POST /upload
+```
+
+#### Request:
+
+- **Body:** Multipart form-data
+  - `excelFile` (File) - The Excel file to process.
+  - `selectedTemplate` (String) - Name of the template to use.
+
+#### Response:
+
+- **Success:** 200 OK, ZIP file download.
+- **Failure:** 400 or 500 Error with message.
+
+## Key Functions in `server.js`
+
+### `upload.single('excelFile')`
+
+Handles file uploads and stores them in the `uploads/` directory.
+
+### `xlsx.readFile(filePath)`
+
+Reads and extracts data from the uploaded Excel file.
+
+### `docxtemplater.setData(data)`
+
+Populates the selected Word template with extracted Excel data.
+
+### `zip.writeZip(zipFilePath)`
+
+Creates a ZIP archive with all generated reports.
+
+### `res.download(zipFilePath, 'reports.zip')`
+
+Sends the ZIP file as a response for download.
+
+## Customization
+
+- **Add More Templates:** Place `.docx` files in the `src/` directory.
+- **Modify Data Mapping:** Adjust `server.js` to map new Excel fields to templates.
+- **Change File Structure:** Update `filePathToAdd` logic for different file naming schemes.
+
+## Contributing
+
+Contributions are welcome! Submit issues or pull requests.
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+### References
+
+For more details, visit the [GitHub repository](https://github.com/JB-VERGARA/e2d-report-generator).
+

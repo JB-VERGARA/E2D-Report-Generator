@@ -90,7 +90,7 @@ app.post('/upload', upload.single('excelFile'), async (req, res) => {
         const pizZip = new PizZip(templateFile);
         const doc = new docxtemplater(pizZip);
 
-        // Set data for placeholders
+        // Set of datas
         doc.setData({
           Client: row.Client,
           ClientAddress: row['Client Address'],
