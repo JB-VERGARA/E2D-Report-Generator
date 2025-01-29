@@ -1,8 +1,8 @@
-# E2D (Excel to Document) Report Generator (Developer Guide)
+# E2D Report Generator (Developer Guide)
 
 ## Introduction
 
-The **E2D Report Generator** automates the conversion of Excel data into formatted Word documents using customizable templates. This tool is perfect for developers looking to streamline report generation.
+The **E2D (Excel to Document) Report Generator** automates the conversion of Excel data into formatted Word documents using customizable templates. This tool is perfect for developers looking to streamline report generation.
 
 ## Why Use This Repository?
 
